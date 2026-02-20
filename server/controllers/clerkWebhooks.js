@@ -5,8 +5,11 @@ import { Message } from "svix/dist/api/message.js";
 
 const clerkWebhooks = async (req,res)=>{
     try {
+        console.log("📩 Webhook received");
+        
         // create a svix instance
         const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
+        
         // get headers
         const headers = {
             "svix-id": req.headers["svix-id"],
@@ -14,32 +17,40 @@ const clerkWebhooks = async (req,res)=>{
             "svix-signature": req.headers["svix-signature"],
         }
 
+        // Get raw body (req.body is a Buffer when using express.raw)
+        const payload = req.body.toString();
+        
         //verifying Headers
-        await whook.verify(JSON.stringify(req.body), headers)
+        await whook.verify(payload, headers)
 
-        //getting data from request body
-        const {data, type} = req.body
+        // Parse the body
+        const body = JSON.parse(payload);
+        const {data, type} = body
+        
+        console.log("📩 Event type:", type);
         
         // switch case reference
         switch (type) {
             case "user.created":{
+                console.log("👤 Creating user:", data.id);
                 const userData = {
                     _id:data.id,
-                    email: data.email_addresses[0].email_addresses,
+                    email: data.email_addresses[0].email_address,
                     username: data.first_name + " " + data.last_name,
-                    image:data.image_url,
+                    Image:data.image_url,
                 };
                 await User.create(userData)
+                console.log("✅ User created successfully!");
                 break;
             }
              case "user.updated":{
                 const userData = {
                     _id:data.id,
-                    email: data.email_addresses[0].email_addresses,
+                    email: data.email_addresses[0].email_address,
                     username: data.first_name + " " + data.last_name,
-                    image:data.image_url,
+                    Image:data.image_url,
                 };
-                await User.findByIdAndupdate(data.id, userData)
+                await User.findByIdAndUpdate(data.id, userData)
                 break;
             }
              case "user.deleted":{
