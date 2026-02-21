@@ -4,7 +4,7 @@ import "dotenv/config"
 import connectDB from "./config/mongodb.js"
 import { clerkMiddleware } from '@clerk/express'
 import clerkWebhooks from "./controllers/clerkWebhooks.js"
-import User from "./models/User.js"
+
 
  
 await connectDB();// establish connection to the database
