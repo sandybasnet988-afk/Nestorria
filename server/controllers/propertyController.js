@@ -1,8 +1,6 @@
  import {v2 as cloudinary} from "cloudinary"
- import Agency from "../models/Agency.js"
- import Property from "../models/Property.js"
-import { Message } from "svix/dist/api/message";
-import { populate } from "dotenv";
+import Agency from "../models/Agency.js"
+import Property from "../models/Property.js"
 
  // create a new property [post'/properties']
  export const createNewProperty = async(req,res)=>{
@@ -89,7 +87,7 @@ import { populate } from "dotenv";
         propertyData.isAvailable = !propertyData.isAvailable
         await propertyData.save()
 
-        ews.json({success:true, Message:"status Updated"})
+        res.json({success:true, Message:"status Updated"})
     } catch (error) {
         res.json({success: false, Message: error. message});
     }

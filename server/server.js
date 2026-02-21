@@ -7,6 +7,7 @@ import clerkWebhooks from "./controllers/clerkWebhooks.js"
 import userRouter from "./routes/userRoute.js"
 import agencyRouter from "./routes/agencyRoute.js"
 import User from "./models/User.js"
+import propertyRouter from "./routes/propertyRoute.js"
 
 
  
@@ -22,6 +23,7 @@ app.post("/api/clerk", express.raw({type: 'application/json'}), clerkWebhooks)
 //define API routes
 app.use('/api/user', userRouter)
 app.use('/api/agencies', agencyRouter)
+app.use('/api/properties', propertyRouter)
 
 //middleware setup
 app.use(express.json()) // enables json request body parsing

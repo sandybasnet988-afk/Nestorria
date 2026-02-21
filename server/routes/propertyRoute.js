@@ -1,5 +1,13 @@
 import express from "express"
+import { upload } from "../middleware/multer.js"
+import { authUser } from "../middleware/authMiddleware.js"
+import { createNewProperty, getAllAvailableProperties, getOwnerProperties, togglePropertyAvailability } from "../controllers/propertyController.js"
 
-const propertyyRouter = express.Router()
+const propertyRouter = express.Router()
 
-propertyyRouter.post('/',)
+propertyRouter.post('/', upload.array('images', 4), authUser, createNewProperty)
+propertyRouter.get('/', getAllAvailableProperties)
+propertyRouter.get('/owner', getOwnerProperties)
+propertyRouter.post('/toggle-availability',authUser, togglePropertyAvailability)
+
+export default propertyRouter
