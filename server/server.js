@@ -4,6 +4,9 @@ import "dotenv/config"
 import connectDB from "./config/mongodb.js"
 import { clerkMiddleware } from '@clerk/express'
 import clerkWebhooks from "./controllers/clerkWebhooks.js"
+import userRouter from "./routes/userRoute.js"
+import agencyRouter from "./routes/agencyRoute.js"
+import User from "./models/User.js"
 
 
  
@@ -15,6 +18,10 @@ app.use(cors()) // enables cross-origin resources sharing
 
 //API to listen clerk webhooks - MUST be before express.json() and clerkMiddleware
 app.post("/api/clerk", express.raw({type: 'application/json'}), clerkWebhooks)
+
+//define API routes
+app.use('/api/user', userRouter)
+app.use('/api/agencies', agencyRouter)
 
 //middleware setup
 app.use(express.json()) // enables json request body parsing
