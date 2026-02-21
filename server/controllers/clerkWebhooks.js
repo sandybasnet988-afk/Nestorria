@@ -10,12 +10,15 @@ const clerkWebhooks = async (req,res)=>{
         // create a svix instance
         const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
         
-        // get headers
+        // get headers (handle both lowercase and original case)
         const headers = {
-            "svix-id": req.headers["svix-id"],
-            "svix-timestamp": req.headers["svix-timestamp"],
-            "svix-signature": req.headers["svix-signature"],
+            "svix-id": req.headers["svix-id"] || req.headers["x-svix-id"],
+            "svix-timestamp": req.headers["svix-timestamp"] || req.headers["x-svix-timestamp"],
+            "svix-signature": req.headers["svix-signature"] || req.headers["x-svix-signature"],
         }
+        
+        // Log headers for debugging
+        console.log("Headers received:", Object.keys(req.headers).filter(k => k.includes('svix')));
 
         // Get raw body (req.body is a Buffer when using express.raw)
         const payload = req.body.toString();
